@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>يوسف — من الطريق إلى الكود</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0b0f14;
+    --panel: #121821;
+    --panel-line: #1e2733;
+    --text: #e7edf3;
+    --muted: #8a99a8;
+    --route: #f2b705;       /* لون خط المسار - إشارة توصيل */
+    --stop: #35d0a6;        /* لون نقاط التوقف - أخضر تتبع */
+  }
+  *{margin:0; padding:0; box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'IBM Plex Sans Arabic', sans-serif;
+    line-height:1.7;
+    overflow-x:hidden;
+  }
+  .tag{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.72rem;
+    letter-spacing:.05em;
+    color:var(--stop);
+    text-transform:uppercase;
+  }
+  h1,h2,h3{ font-family:'Tajawal', sans-serif; }
+
+  /* ===== المسار الخطي - العنصر المميز ===== */
+  .route-track{
+    position:fixed;
+    top:0; bottom:0; right:24px;
+    width:2px;
+    background:repeating-linear-gradient(
+      to bottom,
+      var(--route) 0 6px,
+      transparent 6px 14px
+    );
+    opacity:.55;
+    z-index:0;
+  }
+  @media (max-width:640px){ .route-track{ right:14px; } }
+
+  .wrap{ max-width:760px; margin:0 auto; padding:0 28px; position:relative; z-index:1; }
+  @media (max-width:640px){ .wrap{ padding:0 40px 0 18px; } }
+
+  /* ===== الهيدر ===== */
+  header{ min-height:92vh; display:flex; flex-direction:column; justify-content:center; padding:40px 0; }
+  .status-line{
+    display:flex; align-items:center; gap:10px; margin-bottom:22px;
+  }
+  .dot{
+    width:9px; height:9px; border-radius:50%;
+    background:var(--stop);
+    box-shadow:0 0 0 4px rgba(53,208,166,.15);
+    animation:pulse 2s infinite;
+  }
+  @keyframes pulse{ 0%,100%{opacity:1} 50%{opacity:.4} }
+
+  header h1{
+    font-size:clamp(2.3rem, 8vw, 3.4rem);
+    font-weight:900;
+    line-height:1.15;
+    margin-bottom:18px;
+  }
+  header h1 span{ color:var(--route); }
+  header p.lede{
+    color:var(--muted);
+    font-size:1.05rem;
+    max-width:44ch;
+    margin-bottom:30px;
+  }
+  .cta-row{ display:flex; gap:14px; flex-wrap:wrap; }
+  .btn{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.85rem;
+    padding:13px 22px;
+    border-radius:8px;
+    text-decoration:none;
+    display:inline-block;
+    transition:transform .15s ease, opacity .15s ease;
+  }
+  .btn:focus-visible{ outline:2px solid var(--stop); outline-offset:3px; }
+  .btn-primary{ background:var(--route); color:#0b0f14; font-weight:600; }
+  .btn-ghost{ border:1px solid var(--panel-line); color:var(--text); }
+  .btn:hover{ transform:translateY(-2px); }
+
+  /* ===== نقطة توقف (قسم) ===== */
+  .stop{ padding:70px 0; position:relative; }
+  .stop::before{
+    content:'';
+    position:absolute;
+    right:-6px; top:76px;
+    width:12px; height:12px;
+    border-radius:50%;
+    background:var(--bg);
+    border:2px solid var(--stop);
+  }
+  @media (max-width:640px){ .stop::before{ right:-32px; } }
+
+  .stop .tag{ display:block; margin-bottom:10px; }
+  .stop h2{ font-size:1.6rem; margin-bottom:24px; }
+
+  /* ===== المهارات ===== */
+  .skills-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+  }
+  @media (max-width:480px){ .skills-grid{ grid-template-columns:1fr; } }
+  .skill-card{
+    background:var(--panel);
+    border:1px solid var(--panel-line);
+    border-radius:10px;
+    padding:18px;
+  }
+  .skill-card h3{ font-size:1rem; margin-bottom:6px; }
+  .skill-card p{ color:var(--muted); font-size:.88rem; }
+  .skill-bar{
+    margin-top:12px; height:4px; border-radius:2px;
+    background:var(--panel-line); overflow:hidden;
+  }
+  .skill-bar i{ display:block; height:100%; background:var(--stop); border-radius:2px; }
+
+  /* ===== المشاريع ===== */
+  .project-card{
+    background:var(--panel);
+    border:1px solid var(--panel-line);
+    border-radius:12px;
+    padding:22px;
+    margin-bottom:16px;
+    transition:border-color .2s ease;
+  }
+  .project-card:hover{ border-color:var(--route); }
+  .project-head{
+    display:flex; justify-content:space-between; align-items:baseline;
+    gap:10px; margin-bottom:8px; flex-wrap:wrap;
+  }
+  .project-head h3{ font-size:1.05rem; }
+  .project-status{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.7rem;
+    color:var(--route);
+    border:1px solid var(--route);
+    padding:2px 8px;
+    border-radius:20px;
+    white-space:nowrap;
+  }
+  .project-card p{ color:var(--muted); font-size:.92rem; margin-bottom:12px; }
+  .project-link{ color:var(--stop); font-size:.85rem; text-decoration:none; font-family:'JetBrains Mono', monospace; }
+  .project-link:hover{ text-decoration:underline; }
+
+  /* ===== التواصل ===== */
+  .contact-links{ display:flex; flex-direction:column; gap:10px; }
+  .contact-links a{
+    color:var(--text); text-decoration:none;
+    padding:14px 16px;
+    background:var(--panel);
+    border:1px solid var(--panel-line);
+    border-radius:10px;
+    display:flex; justify-content:space-between; align-items:center;
+    font-size:.95rem;
+    transition:border-color .2s ease;
+  }
+  .contact-links a:hover{ border-color:var(--stop); }
+  .contact-links span{ font-family:'JetBrains Mono', monospace; color:var(--muted); font-size:.8rem; }
+
+  footer{ padding:40px 0 60px; color:var(--muted); font-size:.8rem; font-family:'JetBrains Mono', monospace; }
+
+  @media (prefers-reduced-motion: reduce){
+    .dot{ animation:none; }
+    html{ scroll-behavior:auto; }
+  }
+</style>
+</head>
+<body>
+
+<div class="route-track" aria-hidden="true"></div>
+
+<div class="wrap">
+
+  <header>
+    <div class="status-line">
+      <span class="dot"></span>
+      <span class="tag">قيد التوصيل — من الطريق إلى الكود</span>
+    </div>
+    <h1>يوسف<br><span>يبني طريقه في البرمجة</span></h1>
+    <p class="lede">سائق توصيل يحوّل ساعتين يوميًا من وقته إلى مهارات ويب حقيقية — يتعلّم وينفّذ، كل ذلك من هاتفه.</p>
+    <div class="cta-row">
+      <a href="#projects" class="btn btn-primary">شاهد المشاريع</a>
+      <a href="#contact" class="btn btn-ghost">تواصل معي</a>
+    </div>
+  </header>
+
+  <section class="stop" id="skills">
+    <span class="tag">01 / نقطة توقف</span>
+    <h2>المهارات الحالية</h2>
+    <div class="skills-grid">
+      <div class="skill-card">
+        <h3>HTML</h3>
+        <p>بناء هيكل صفحات دلالي ومنظم</p>
+        <div class="skill-bar"><i style="width:75%"></i></div>
+      </div>
+      <div class="skill-card">
+        <h3>CSS</h3>
+        <p>تنسيق، تخطيط Flexbox/Grid، استجابة كاملة</p>
+        <div class="skill-bar"><i style="width:65%"></i></div>
+      </div>
+      <div class="skill-card">
+        <h3>JavaScript</h3>
+        <p>أساسيات المنطق والتفاعل مع الصفحة</p>
+        <div class="skill-bar"><i style="width:30%"></i></div>
+      </div>
+      <div class="skill-card">
+        <h3>Git / GitHub</h3>
+        <p>رفع المشاريع ونشرها عبر GitHub Pages</p>
+        <div class="skill-bar"><i style="width:40%"></i></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="stop" id="projects">
+    <span class="tag">02 / نقطة توقف</span>
+    <h2>المشاريع</h2>
+
+    <div class="project-card">
+      <div class="project-head">
+        <h3>هذه الصفحة</h3>
+        <span class="project-status">أول مشروع</span>
+      </div>
+      <p>صفحة بورتفوليو مبنية بالكامل بـ HTML/CSS من الهاتف، بتصميم مستوحى من عالم التوصيل والمسارات.</p>
+      <a class="project-link" href="#">عرض الكود ↗</a>
+    </div>
+
+    <div class="project-card">
+      <div class="project-head">
+        <h3>صفحة هبوط تجريبية</h3>
+        <span class="project-status">قريبًا</span>
+      </div>
+      <p>صفحة تعريفية لمنتج وهمي لتدريب مهارات التخطيط والتنسيق البصري.</p>
+    </div>
+
+    <div class="project-card">
+      <div class="project-head">
+        <h3>صفحة Link in Bio</h3>
+        <span class="project-status">قريبًا</span>
+      </div>
+      <p>صفحة روابط شخصية بسيطة، تصلح للربط بحساب التيك توك.</p>
+    </div>
+  </section>
+
+  <section class="stop" id="contact">
+    <span class="tag">03 / الوجهة الأخيرة</span>
+    <h2>تواصل معي</h2>
+    <div class="contact-links">
+      <a href="#"><span>خمسات</span> Khamsat.com</a>
+      <a href="#"><span>تيك توك</span> @username</a>
+      <a href="#"><span>البريد</span> you@email.com</a>
+    </div>
+  </section>
+
+  <footer>
+    مبنية يدويًا بـ HTML و CSS — بلا أطر، بلا أدوات بناء، فقط من الهاتف.
+  </footer>
+
+</div>
+
+</body>
+</html>
