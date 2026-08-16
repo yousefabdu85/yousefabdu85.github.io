@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نُمو — تسويق رقمي يُحرّك أرقامك</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;700;900&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0e1420;
+    --panel: #161d2c;
+    --line: #262f42;
+    --text: #eef1f6;
+    --muted: #93a0b8;
+    --lime: #c6ff5c;   /* لون النمو / الحركة الصاعدة */
+    --coral: #ff6b5c;  /* لون تنبيه / تمييز */
+  }
+  *{margin:0; padding:0; box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'IBM Plex Sans Arabic', sans-serif;
+    line-height:1.7;
+  }
+  h1,h2,h3{ font-family:'Cairo', sans-serif; }
+  .mono{ font-family:'JetBrains Mono', monospace; letter-spacing:.03em; }
+
+  .wrap{ max-width:760px; margin:0 auto; padding:0 24px; }
+
+  /* ===== شريط علوي ===== */
+  nav{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:22px 0;
+  }
+  .logo{ font-family:'Cairo', sans-serif; font-weight:900; font-size:1.3rem; }
+  .logo span{ color:var(--lime); }
+  nav a.cta-small{
+    font-size:.82rem; color:var(--bg); background:var(--lime);
+    padding:9px 18px; border-radius:8px; text-decoration:none; font-weight:600;
+  }
+
+  /* ===== خط نمو خلفي (SVG) ===== */
+  .growth-line{
+    position:absolute; inset:0; width:100%; height:100%;
+    z-index:0; opacity:.5; pointer-events:none;
+  }
+
+  /* ===== الهيرو ===== */
+  header{
+    position:relative;
+    padding:50px 0 60px;
+    overflow:hidden;
+  }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    background:var(--panel); border:1px solid var(--line);
+    padding:6px 14px; border-radius:20px;
+    font-size:.75rem; color:var(--lime);
+    margin-bottom:22px;
+  }
+  header h1{
+    position:relative; z-index:1;
+    font-size:clamp(2.1rem, 8vw, 3.1rem);
+    font-weight:900; line-height:1.25;
+    margin-bottom:18px;
+  }
+  header h1 em{ font-style:normal; color:var(--lime); }
+  header p.lede{
+    position:relative; z-index:1;
+    color:var(--muted); font-size:1.05rem; max-width:46ch; margin-bottom:32px;
+  }
+  .cta-row{ position:relative; z-index:1; display:flex; gap:14px; flex-wrap:wrap; }
+  .btn{
+    font-family:'JetBrains Mono', monospace; font-size:.85rem;
+    padding:14px 24px; border-radius:9px; text-decoration:none;
+    display:inline-block; transition:transform .15s ease;
+  }
+  .btn:hover{ transform:translateY(-2px); }
+  .btn-primary{ background:var(--lime); color:var(--bg); font-weight:600; }
+  .btn-ghost{ border:1px solid var(--line); color:var(--text); }
+
+  .stats-row{
+    position:relative; z-index:1;
+    display:flex; gap:28px; margin-top:46px; flex-wrap:wrap;
+  }
+  .stat b{ display:block; font-family:'Cairo'; font-size:1.6rem; color:var(--lime); }
+  .stat span{ font-size:.8rem; color:var(--muted); }
+
+  /* ===== الخدمات ===== */
+  section{ padding:60px 0; border-top:1px solid var(--line); }
+  .section-label{ display:block; margin-bottom:10px; color:var(--coral); font-size:.75rem; }
+  section h2{ font-size:1.6rem; margin-bottom:30px; }
+
+  .service-grid{ display:grid; grid-template-columns:1fr; gap:14px; }
+  .service-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:12px;
+    padding:22px; display:flex; gap:16px; align-items:flex-start;
+  }
+  .service-num{
+    font-family:'JetBrains Mono', monospace; font-size:.75rem; color:var(--lime);
+    border:1px solid var(--line); border-radius:50%;
+    width:34px; height:34px; display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+  }
+  .service-card h3{ font-size:1.02rem; margin-bottom:6px; }
+  .service-card p{ color:var(--muted); font-size:.9rem; }
+
+  /* ===== الأسعار ===== */
+  .pricing-grid{ display:grid; grid-template-columns:1fr; gap:16px; }
+  .price-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:14px;
+    padding:26px;
+  }
+  .price-card.featured{ border-color:var(--lime); position:relative; }
+  .price-card.featured::before{
+    content:'الأكثر طلبًا';
+    position:absolute; top:-12px; right:22px;
+    background:var(--lime); color:var(--bg);
+    font-size:.7rem; font-weight:700;
+    padding:4px 12px; border-radius:20px;
+    font-family:'Cairo';
+  }
+  .price-card h3{ font-size:1.05rem; margin-bottom:6px; }
+  .price{ font-family:'Cairo'; font-size:2rem; font-weight:900; margin:14px 0; }
+  .price span{ font-size:.9rem; color:var(--muted); font-weight:400; }
+  .price-card ul{ list-style:none; margin:18px 0 22px; }
+  .price-card li{
+    font-size:.88rem; color:var(--muted); padding:8px 0;
+    border-top:1px dashed var(--line);
+    display:flex; align-items:center; gap:8px;
+  }
+  .price-card li:first-child{ border-top:none; }
+  .price-card li::before{ content:'—'; color:var(--lime); }
+  .price-card .btn{ width:100%; text-align:center; }
+
+  /* ===== الدعوة النهائية ===== */
+  .final-cta{
+    text-align:center; padding:70px 0;
+    background:linear-gradient(180deg, transparent, rgba(198,255,92,.05));
+  }
+  .final-cta h2{ font-size:1.8rem; margin-bottom:14px; }
+  .final-cta p{ color:var(--muted); margin-bottom:28px; }
+
+  footer{ padding:36px 0 50px; text-align:center; color:var(--muted); font-size:.8rem; }
+
+  @media (min-width:600px){
+    .service-grid{ grid-template-columns:1fr 1fr; }
+    .pricing-grid{ grid-template-columns:1fr 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <nav>
+    <div class="logo">نُ<span>مو</span></div>
+    <a href="#pricing" class="cta-small">ابدأ الآن</a>
+  </nav>
+
+  <header>
+    <svg class="growth-line" viewBox="0 0 400 220" preserveAspectRatio="none">
+      <polyline points="0,200 60,180 110,190 160,120 210,140 260,60 310,90 400,10"
+        fill="none" stroke="#c6ff5c" stroke-width="2" stroke-dasharray="4 6" />
+    </svg>
+
+    <span class="eyebrow">● متاح لعملاء جدد هذا الشهر</span>
+    <h1>نصمّم <em>نموًا</em> حقيقيًا لعلامتك، لا مجرد إعلانات</h1>
+    <p class="lede">خدمة تسويق رقمي متخصصة في السوق العربي — نبني لك استراتيجية إعلانية مدروسة على Meta وGoogle، مبنية على أرقام لا تخمين.</p>
+    <div class="cta-row">
+      <a href="#pricing" class="btn btn-primary">اطلب استشارة مجانية</a>
+      <a href="#services" class="btn btn-ghost">شاهد خدماتنا</a>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat"><b>+40%</b><span>متوسط نمو التحويلات</span></div>
+      <div class="stat"><b>3x</b><span>عائد أعلى على الإنفاق</span></div>
+      <div class="stat"><b>14</b><span>يوم لأول نتائج ملموسة</span></div>
+    </div>
+  </header>
+
+  <section id="services">
+    <span class="section-label mono">// الخدمات</span>
+    <h2>وش نقدّم لك بالضبط</h2>
+    <div class="service-grid">
+      <div class="service-card">
+        <div class="service-num">01</div>
+        <div><h3>إدارة إعلانات Meta</h3><p>استهداف دقيق وتحسين مستمر لخفض تكلفة النقرة ورفع التحويلات.</p></div>
+      </div>
+      <div class="service-card">
+        <div class="service-num">02</div>
+        <div><h3>إعلانات Google</h3><p>حملات بحث وعرض مبنية على كلمات مفتاحية عالية النية الشرائية.</p></div>
+      </div>
+      <div class="service-card">
+        <div class="service-num">03</div>
+        <div><h3>تحليل الأداء</h3><p>تقارير أسبوعية واضحة تربط كل ريال إعلاني بنتيجة فعلية.</p></div>
+      </div>
+      <div class="service-card">
+        <div class="service-num">04</div>
+        <div><h3>استراتيجية المحتوى</h3><p>خطة محتوى تدعم الحملات وتبني ثقة الجمهور بعلامتك.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="pricing">
+    <span class="section-label mono">// الأسعار</span>
+    <h2>باقات تناسب حجم مشروعك</h2>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <h3>البداية</h3>
+        <div class="price">690<span> ريال / شهريًا</span></div>
+        <ul>
+          <li>منصة إعلانية واحدة</li>
+          <li>تقرير أداء شهري</li>
+          <li>دعم عبر البريد</li>
+        </ul>
+        <a href="#" class="btn btn-ghost">اختر الباقة</a>
+      </div>
+      <div class="price-card featured">
+        <h3>النمو</h3>
+        <div class="price">1290<span> ريال / شهريًا</span></div>
+        <ul>
+          <li>منصتان إعلانيتان</li>
+          <li>تقارير أسبوعية</li>
+          <li>تحسين مستمر للحملات</li>
+          <li>دعم مباشر عبر واتساب</li>
+        </ul>
+        <a href="#" class="btn btn-primary">اختر الباقة</a>
+      </div>
+      <div class="price-card">
+        <h3>الاحترافية</h3>
+        <div class="price">2490<span> ريال / شهريًا</span></div>
+        <ul>
+          <li>جميع المنصات الإعلانية</li>
+          <li>استراتيجية محتوى شهرية</li>
+          <li>مدير حساب مخصص</li>
+        </ul>
+        <a href="#" class="btn btn-ghost">اختر الباقة</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="final-cta">
+    <h2>جاهز تشوف أرقامك تتحرك؟</h2>
+    <p>استشارة أولى مجانية، بدون أي التزام.</p>
+    <a href="#" class="btn btn-primary">احجز استشارتك الآن</a>
+  </section>
+
+  <footer>
+    نُمو — خدمة تسويق رقمي تجريبية · صفحة تدريبية بُنيت بـ HTML/CSS من الهاتف
+  </footer>
+</div>
+
+</body>
+</html>
